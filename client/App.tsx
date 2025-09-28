@@ -11,6 +11,7 @@ import Docs from "./pages/Docs";
 import Company from "./pages/company";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "@/components/common/PlaceholderPage";
+import Legal from "./pages/Legal";
 import AppDashboard from "@/pages/AppDashboard";
 import { I18nProvider } from "@/i18n/i18n";
 
@@ -65,7 +66,7 @@ const App = () => (
               element={<PlaceholderPage title="Blog & Resources" />}
             />
             <Route path="/company" element={<Company />} />
-            <Route path="/legal" element={<PlaceholderPage title="Legal" />} />
+            <Route path="/legal" element={<Legal />} />
 
             <Route
               path="/app"
