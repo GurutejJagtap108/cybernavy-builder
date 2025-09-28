@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CyberNavy – Modern SOC Platform (Prototype)
 
 This project is a production‑grade React + Vite + Tailwind app with an Express API. It implements a marketing site and a protected /app dashboard prototype for the CyberNavy security operations platform.
