@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
+// No motion wrappers for dashboard modules (animations disabled here)
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/layout/AppShell";
 
@@ -36,7 +37,7 @@ export default function Threats() {
             <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-cyan-200/60 to-transparent dark:from-cyan-500/60 rounded-t-2xl" />
             </Card>
           </div>
-        </div>
+  </div>
       </div>
     </AppShell>
   );

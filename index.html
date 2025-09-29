@@ -3,6 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Immediate background + early theme script to reduce white flash before React mounts -->
+    <style>
+      /* Default to a light background for first paint; users with dark system preference will be handled by media query */
+      html, body, #root { background: #f1f8fa; }
+      @media (prefers-color-scheme: dark) { html, body, #root { background: #0a1018; } }
+    </style>
+    <script>
+      // Apply saved or preferred theme as early as possible to avoid white flash on mount.
+      // Behavior: use saved preference if present; otherwise use system preference.
+      (function(){
+        try {
+          const saved = localStorage.getItem('theme');
+          if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          /* ignore localStorage errors */
+          try {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              document.documentElement.classList.add('dark');
+            }
+          } catch (e) {
+            /* swallow */
+          }
+        }
+      })();
+    </script>
     <title>Hello world project</title>
   </head>
 

@@ -48,7 +48,7 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
 
 // Registration endpoint
 router.post("/register", async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, username } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ error: "Name, email, and password are required" });
   }
@@ -61,7 +61,7 @@ router.post("/register", async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(password, 10);
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await db.collection("users").insertOne({
+    const userData: any = {
       name,
       email,
       password: hash,
@@ -70,7 +70,12 @@ router.post("/register", async (req: Request, res: Response) => {
       verified: false,
       otp,
       otpExpires: new Date(Date.now() + 1000 * 60 * 10), // 10 min
-    });
+    };
+    // Only add username if provided to avoid null constraint issues
+    if (username) {
+      userData.username = username;
+    }
+    await db.collection("users").insertOne(userData);
     // Send OTP email
     await sendEmail({
       to: email,
@@ -130,13 +135,21 @@ router.get("/health", async (_req: Request, res: Response) => {
 
 // Profile update (username, password, bio, location, avatar)
 router.post("/profile", requireAuth, async (req: Request, res: Response) => {
-  const { name, password } = req.body;
+  const { name, password, username } = req.body;
   const db = await getDb();
   const userId = (req as any).user.id;
   const update: any = {};
   if (name) update.name = name;
   if (password) update.password = await bcrypt.hash(password, 10);
-  if (!name && !password) return res.status(400).json({ error: "Nothing to update" });
+  if (username) {
+    // Check if username is already taken
+    const existingUser = await db.collection("users").findOne({ username, _id: { $ne: ObjectId.isValid(userId) ? new ObjectId(userId) : userId } });
+    if (existingUser) {
+      return res.status(400).json({ error: "Username already taken" });
+    }
+    update.username = username;
+  }
+  if (!name && !password && !username) return res.status(400).json({ error: "Nothing to update" });
   await db.collection("users").updateOne({ _id: ObjectId.isValid(userId) ? new ObjectId(userId) : userId }, { $set: update });
   res.json({ message: "Profile updated" });
 });

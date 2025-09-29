@@ -1,3 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap");
+
+/* Initial theme tokens (light-first). We avoid forcing a dark background at the top
+   of the file so users in light mode don't see a dark flash during quick route changes.
+   Dark mode is supported via the prefers-color-scheme media query and the `.dark` class. */
+:root {
+  --app-bg: #f1f8fa; /* light background for first paint */
+  --app-text: #0b1115; /* dark text on light bg */
+  --background: 190 60% 94%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-bg: #0b1115; /* deep dark */
+    --app-text: #e6eef6;
+    --background: 217 33% 4%;
+  }
+}
+
+html, body, #root {
+  background: hsl(var(--background));
+  color: var(--app-text);
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Dashboard metric cards: force dark backgrounds in dark mode */
   .dark .dashboard-metric {
     background: linear-gradient(120deg, hsl(220, 16%, 14%) 90%, hsl(220, 16%, 18%) 100%) !important;
@@ -61,10 +90,6 @@
   60% { opacity: 1; transform: scale(1.03) rotateX(0deg); filter: blur(0); }
  100% { opacity: 1; transform: none; filter: none; }
 }
-/** @import must precede all other statements */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -301,4 +326,14 @@ If you see "Unknown at rule @tailwind", check your editor or build tool configur
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Close @layer components block */
 }
+
+/* --- Ensure dark-mode root background is enforced to avoid flashes --- */
+html.dark, body.dark, .dark, .dark html, .dark body, .dark #root, #root.dark {
+  /* Match the dark theme token closely; use !important to override transient styles */
+  background-color: hsl(217 33% 4%) !important;
+  color-scheme: dark;
+}
+/* --- End dark-mode root enforcement --- */

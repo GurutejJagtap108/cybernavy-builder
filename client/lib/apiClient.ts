@@ -39,10 +39,10 @@ export class ApiClient {
     path: string,
     config: RequestConfig = {},
   ): Promise<T> {
-    const url = new URL(
-      path,
-      this.baseURL || window.location.origin,
-    ).toString();
+    const fallbackOrigin =
+      (typeof window !== "undefined" && window.location && window.location.origin) ||
+      "http://localhost";
+    const url = new URL(path, this.baseURL || fallbackOrigin).toString();
     const init: RequestInit = {
       method: config.method || "GET",
       headers: {

@@ -8,8 +8,12 @@ import { handleDemo } from "./routes/demo";
 import { listEvents, listThreats } from "./routes/security";
 import { ingest } from "./routes/moderation";
 import authRouter from "./routes/auth";
+import { initializeDatabase } from "./init-db";
 export function createServer() {
   const app = express();
+  
+  // Initialize database indexes
+  initializeDatabase().catch(console.error);
 
   // CORS: allow credentials and frontend origin
   app.use(cors({
