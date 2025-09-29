@@ -60,7 +60,7 @@ export default function Home() {
             <Link to="/app" className="inline-flex">
               <Button
                 onClick={() => track("cta_click", { cta: "get_started" })}
-                className="h-11 px-6 bg-gradient-to-tr from-cyan-500 to-teal-400 text-white shadow-lg shadow-cyan-900/30"
+                className="h-11 px-6 bg-gradient-to-tr from-cyan-500 to-teal-400 text-white shadow-lg shadow-cyan-900/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-cyan-900/40"
               >
                 Launch Dashboard
               </Button>

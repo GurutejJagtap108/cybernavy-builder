@@ -27,6 +27,20 @@ html, body, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Light mode text improvements */
+.text-gray-700 {
+  color: hsl(var(--foreground)) !important;
+}
+.text-gray-900 {
+  color: hsl(var(--foreground)) !important;
+}
+.text-white\/80 {
+  color: hsl(var(--foreground)) !important;
+}
+.text-white\/90 {
+  color: hsl(var(--foreground)) !important;
+}
+
 /* Dashboard metric cards: force dark backgrounds in dark mode */
   .dark .dashboard-metric {
     background: linear-gradient(120deg, hsl(220, 16%, 14%) 90%, hsl(220, 16%, 18%) 100%) !important;
@@ -45,6 +59,20 @@ html, body, #root {
   }
   .dark .dashboard-metric .bg-gradient-to-r {
     background: linear-gradient(90deg, #183a4a 0%, #1a3d4d 100%) !important;
+  }
+  
+  /* Restore dark mode text colors */
+  .dark .text-gray-700 {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+  .dark .text-gray-900 {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  .dark .text-white\/80 {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+  .dark .text-white\/90 {
+    color: rgba(255, 255, 255, 0.9) !important;
   }
 /* Card entrance and hover animations */
 .card-animate {
@@ -103,15 +131,15 @@ If you see "Unknown at rule @tailwind", check your editor or build tool configur
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
-    /* CyberNavy theme: deep navy/charcoal base with cyan/teal accents */
-  --background: 190 60% 94%; /* modern cyan-tinted blue */
-  --foreground: 222 47% 10%; /* slightly lighter for cyan bg */
+    /* CyberNavy theme: improved light mode with better contrast */
+  --background: 0 0% 98%; /* clean white background */
+  --foreground: 222 84% 4.9%; /* dark text for better contrast */
 
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 222 84% 4.9%;
 
-  --popover: 0 0% 99%;
-  --popover-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 84% 4.9%;
 
   --primary: 200 98% 48%; /* modern blue */
   --primary-foreground: 0 0% 100%;
@@ -119,8 +147,8 @@ If you see "Unknown at rule @tailwind", check your editor or build tool configur
   --secondary: 162 100% 40%; /* modern teal */
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 220 16% 94%;
-  --muted-foreground: 222 20% 28%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
 
   --accent: 265 82% 62%; /* modern purple accent */
   --accent-foreground: 0 0% 100%;
@@ -128,20 +156,20 @@ If you see "Unknown at rule @tailwind", check your editor or build tool configur
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 220 16% 88%;
-  --input: 220 16% 88%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
   --ring: 189 94% 43%;
 
   --radius: 0.75rem; /* 12px */
 
   /* Sidebar tokens */
   --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 222 47% 11%;
+  --sidebar-foreground: 222 84% 4.9%;
   --sidebar-primary: 189 94% 43%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 210 16% 90%;
-  --sidebar-accent-foreground: 222 47% 11%;
-  --sidebar-border: 210 16% 85%;
+  --sidebar-accent: 210 40% 96%;
+  --sidebar-accent-foreground: 222 84% 4.9%;
+  --sidebar-border: 214.3 31.8% 91.4%;
   --sidebar-ring: 189 94% 43%;
   }
 
@@ -204,20 +232,20 @@ If you see "Unknown at rule @tailwind", check your editor or build tool configur
 
 @layer components {
   .glass-card {
-    background: linear-gradient(120deg, hsl(var(--card)) 80%, hsl(var(--muted)) 100%);
+    background: linear-gradient(120deg, hsl(var(--card)) 95%, hsl(var(--muted)) 100%);
     color: hsl(var(--card-foreground));
     border-radius: 1.1rem;
     border: 1.5px solid hsl(var(--border));
-    box-shadow: 0 6px 32px 0 rgba(60, 80, 120, 0.10), 0 1.5px 6px 0 rgba(60,60,60,0.03);
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04), 0 1px 4px 0 rgba(0, 0, 0, 0.02);
     transition: box-shadow 0.22s, border-color 0.22s, background 0.22s, transform 0.18s;
     backdrop-filter: blur(8px);
     will-change: transform, box-shadow, background;
   }
   .glass-card:hover {
-    background: linear-gradient(120deg, hsl(var(--card)) 70%, hsl(var(--primary))/10 100%);
+    background: linear-gradient(120deg, hsl(var(--card)) 90%, hsl(var(--primary))/8 100%);
     border-color: hsl(var(--primary));
-    box-shadow: 0 16px 48px 0 rgba(60, 180, 255, 0.16), 0 2px 8px 0 rgba(60,60,60,0.07);
-    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+    transform: translateY(-4px) scale(1.02);
     filter: none;
   }
   /* Card content fade-in */
