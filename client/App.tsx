@@ -35,6 +35,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Index from "./pages/Index";
 import Docs from "./pages/Docs";
 import Company from "./pages/company";
@@ -47,6 +48,17 @@ import AppDashboard from "@/pages/AppDashboard";
 import Pricing from "./pages/pricing";
 import { PageFade } from "@/components/common/PageFade";
 import { I18nProvider } from "@/i18n/i18n";
+
+import Threats from "./pages/dashboard/Threats";
+import Detection from "./pages/dashboard/Detection";
+import Moderation from "./pages/dashboard/Moderation";
+import URLManager from "./pages/dashboard/URLManager";
+import Alerts from "./pages/dashboard/Alerts";
+import Incidents from "./pages/dashboard/Incidents";
+import Network from "./pages/dashboard/Network";
+import Reports from "./pages/dashboard/Reports";
+import Settings from "./pages/dashboard/Settings";
+import Integrations from "./pages/dashboard/Integrations";
 
 const queryClient = new QueryClient();
 
@@ -127,6 +139,8 @@ const App = () => (
               <Route path="/company" element={<PageFade><Company /></PageFade>} />
               <Route path="/legal" element={<PageFade><Legal /></PageFade>} />
 
+
+              {/* Dashboard main and function routes */}
               <Route
                 path="/app"
                 element={
@@ -137,16 +151,16 @@ const App = () => (
                   </PageFade>
                 }
               />
-              <Route
-                path="/app/:rest"
-                element={
-                  <PageFade>
-                    <Protected>
-                      <AppDashboard />
-                    </Protected>
-                  </PageFade>
-                }
-              />
+              <Route path="/app/threats" element={<PageFade><Protected><Threats /></Protected></PageFade>} />
+              <Route path="/app/detection" element={<PageFade><Protected><Detection /></Protected></PageFade>} />
+              <Route path="/app/moderation" element={<PageFade><Protected><Moderation /></Protected></PageFade>} />
+              <Route path="/app/url-manager" element={<PageFade><Protected><URLManager /></Protected></PageFade>} />
+              <Route path="/app/alerts" element={<PageFade><Protected><Alerts /></Protected></PageFade>} />
+              <Route path="/app/incidents" element={<PageFade><Protected><Incidents /></Protected></PageFade>} />
+              <Route path="/app/network" element={<PageFade><Protected><Network /></Protected></PageFade>} />
+              <Route path="/app/reports" element={<PageFade><Protected><Reports /></Protected></PageFade>} />
+              <Route path="/app/settings" element={<PageFade><Protected><Settings /></Protected></PageFade>} />
+              <Route path="/app/integrations" element={<PageFade><Protected><Integrations /></Protected></PageFade>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<PageFade><NotFound /></PageFade>} />

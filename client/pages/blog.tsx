@@ -34,32 +34,41 @@ const posts = [
 export default function Blog() {
   return (
     <SiteShell>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-16 px-4">
+      <div className="min-h-screen py-16 px-4">
         <div className="max-w-4xl mx-auto text-center mb-14">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
             Insights & Resources
           </h1>
-          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-700 dark:text-slate-300 max-w-2xl mx-auto">
             Stay up to date with the latest in AI, security, compliance, and digital trust. Thought leadership, best practices, and product updates from the CyberNavy team.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="bg-white/80 dark:bg-[#181f2a] rounded-3xl shadow-lg max-w-5xl mx-auto py-12 px-4 md:px-12 flex flex-col gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <Card key={post.title} className="bg-slate-950/80 border border-slate-800 shadow-xl rounded-2xl p-6 flex flex-col justify-between hover:scale-[1.025] transition-transform">
+            <Card
+              key={post.title}
+              className="relative group bg-gradient-to-br from-white to-slate-100 dark:from-[#181f2a] dark:to-[#232b39] border border-slate-200 dark:border-[#232b39] shadow-lg rounded-2xl p-6 flex flex-col justify-between min-h-[320px] hover:scale-[1.025] hover:shadow-2xl hover:border-cyan-400 dark:hover:border-cyan-500 transition-all duration-200"
+            >
+              {/* Accent bar */}
+              <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-cyan-200/60 to-transparent dark:from-cyan-500/60 rounded-t-2xl transition-colors" />
               <div>
-                <div className="text-xs uppercase text-cyan-400 font-semibold mb-2">{post.tag}</div>
-                <h2 className="text-xl font-bold text-white mb-2">{post.title}</h2>
-                <p className="text-slate-300 mb-4 text-sm">{post.excerpt}</p>
+                <div className="text-xs uppercase text-cyan-500 dark:text-cyan-400 font-semibold mb-2">{post.tag}</div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{post.title}</h2>
+                <p className="text-gray-700 dark:text-slate-300 mb-4 text-sm">{post.excerpt}</p>
               </div>
-              <div className="flex items-center justify-between text-xs text-slate-400 mt-2">
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400 mt-2">
                 <span>{post.author}</span>
                 <span>{new Date(post.date).toLocaleDateString()}</span>
               </div>
-              <Button variant="outline" className="mt-4 w-full border-cyan-700 text-cyan-300 hover:bg-cyan-900/10">
+              <Button
+                className="mt-4 w-full bg-gradient-to-tr from-cyan-400 to-teal-400 dark:from-cyan-500 dark:to-teal-400 text-white font-semibold shadow-lg rounded-lg py-2 group-hover:scale-105 group-hover:shadow-xl transition-transform"
+              >
                 Read More
               </Button>
             </Card>
           ))}
+          </div>
         </div>
         <div className="max-w-2xl mx-auto mt-16 text-center">
           <h3 className="text-xl text-white font-bold mb-2">Want to contribute or suggest a topic?</h3>
