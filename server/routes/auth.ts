@@ -1,9 +1,7 @@
 
-import { sendEmail } from "../utils/email";
-
-
-
 import { Router, Request, Response } from "express";
+import { checkUsername } from "./check-username";
+import { sendEmail } from "../utils/email";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { getDb, pingDb } from "../db";
@@ -12,7 +10,13 @@ import crypto from "crypto";
 // import { sendEmail } from "../utils/email"; // Uncomment if email utils exist
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "changeme";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not set in environment variables. Set it in your .env file.");
+}
+
+// Username availability check
+router.get("/check-username", checkUsername);
 
 // Forgot password: send reset link
 router.post("/forgot-password", async (req: Request, res: Response) => {
@@ -23,6 +27,7 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
   if (!user) return res.status(200).json({ message: "If this email exists, a reset link has been sent." });
   const token = crypto.randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + 1000 * 60 * 30); // 30 min
+
   await db.collection("users").updateOne(
     { email },
     { $set: { resetToken: token, resetTokenExpires: expires } }
@@ -35,20 +40,17 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
       html: `<p>Click <a href=\"${resetUrl}\">here</a> to reset your password. This link expires in 30 minutes.</p>`
     });
   } catch (e) {
-    return res.status(500).json({ error: "Failed to send email" });
+    console.error("[forgot-password] sendEmail error:", e?.stack || e);
   }
-  res.json({ message: "If this email exists, a reset link has been sent." });
+  res.status(200).json({ message: "If this email exists, a reset link has been sent." });
 });
 
 
-// Registration endpoint (Gmail only)
+// Registration endpoint
 router.post("/register", async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Username, email, and password are required" });
-  }
-  if (!/^[^@]+@gmail\.com$/.test(email)) {
-    return res.status(400).json({ error: "Only Gmail accounts are allowed" });
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "Name, email, and password are required" });
   }
   try {
     const db = await getDb();
@@ -57,17 +59,44 @@ router.post("/register", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Email already registered" });
     }
     const hash = await bcrypt.hash(password, 10);
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     await db.collection("users").insertOne({
-      username,
+      name,
       email,
       password: hash,
       createdAt: new Date(),
       isAdmin: false,
+      verified: false,
+      otp,
+      otpExpires: new Date(Date.now() + 1000 * 60 * 10), // 10 min
     });
-    res.json({ message: "Registration successful" });
+    // Send OTP email
+    await sendEmail({
+      to: email,
+      subject: "CyberNavy Account Verification OTP",
+      html: `<p>Your CyberNavy verification code is: <b>${otp}</b></p><p>This code expires in 10 minutes.</p>`
+    });
+    res.json({ message: "OTP sent to email. Please verify to activate your account." });
   } catch (e: any) {
+    console.error("[register] error:", e?.stack || e);
     res.status(500).json({ error: e?.message || String(e) });
   }
+});
+
+// OTP verification endpoint
+router.post("/verify-otp", async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) return res.status(400).json({ error: "Email and OTP required" });
+  const db = await getDb();
+  const user = await db.collection("users").findOne({ email });
+  if (!user) return res.status(400).json({ error: "User not found" });
+  if (user.verified) return res.status(400).json({ error: "Already verified" });
+  if (!user.otp || !user.otpExpires || user.otp !== otp || new Date(user.otpExpires) < new Date()) {
+    return res.status(400).json({ error: "Invalid or expired OTP" });
+  }
+  await db.collection("users").updateOne({ email }, { $set: { verified: true }, $unset: { otp: "", otpExpires: "" } });
+  res.json({ message: "Account verified. You can now log in." });
 });
 
 // --- Middleware ---
@@ -101,16 +130,13 @@ router.get("/health", async (_req: Request, res: Response) => {
 
 // Profile update (username, password, bio, location, avatar)
 router.post("/profile", requireAuth, async (req: Request, res: Response) => {
-  const { username, password, bio, location, avatar } = req.body;
+  const { name, password } = req.body;
   const db = await getDb();
   const userId = (req as any).user.id;
   const update: any = {};
-  if (username) update.username = username;
-  if (bio) update.bio = bio;
-  if (location) update.location = location;
-  if (avatar) update.avatar = avatar;
+  if (name) update.name = name;
   if (password) update.password = await bcrypt.hash(password, 10);
-  if (!username && !password && !bio && !location && !avatar) return res.status(400).json({ error: "Nothing to update" });
+  if (!name && !password) return res.status(400).json({ error: "Nothing to update" });
   await db.collection("users").updateOne({ _id: ObjectId.isValid(userId) ? new ObjectId(userId) : userId }, { $set: update });
   res.json({ message: "Profile updated" });
 });
@@ -147,19 +173,28 @@ router.post("/login", async (req: Request, res: Response) => {
     const db = await getDb();
     const user = await db.collection("users").findOne({ email });
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user.verified) return res.status(401).json({ error: "Account not verified. Please check your email for the OTP." });
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
-    res.cookie("token", token, { httpOnly: false, sameSite: "strict", path: "/", secure: false });
+    // Use secure cookie settings in production
+    const isProd = process.env.NODE_ENV === "production";
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: isProd ? "strict" : "lax",
+      path: "/",
+      secure: isProd,
+    });
     res.json({ message: "Logged in" });
   } catch (e: any) {
+    console.error("[login] error:", e?.stack || e);
     res.status(500).json({ error: e?.message || String(e) });
   }
 });
 
 // Logout
 router.post("/logout", (_req: Request, res: Response) => {
-  res.clearCookie("token");
+  res.clearCookie("token", { path: "/" });
   res.json({ message: "Logged out" });
 });
 
@@ -174,6 +209,7 @@ router.get("/me", async (req: Request, res: Response) => {
     const user = await db.collection("users").findOne({ _id: ObjectId.isValid(userId) ? new ObjectId(userId) : userId });
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json({
+      name: user.name,
       username: user.username,
       email: user.email,
       isAdmin: !!user.isAdmin,
@@ -185,5 +221,6 @@ router.get("/me", async (req: Request, res: Response) => {
     res.status(401).json({ error: "Invalid token" });
   }
 });
+
 
 export default router;

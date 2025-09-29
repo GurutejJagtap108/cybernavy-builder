@@ -1,3 +1,66 @@
+/* Dashboard metric cards: force dark backgrounds in dark mode */
+  .dark .dashboard-metric {
+    background: linear-gradient(120deg, hsl(220, 16%, 14%) 90%, hsl(220, 16%, 18%) 100%) !important;
+    color: hsl(var(--card-foreground));
+    border: 1.5px solid hsl(220, 16%, 28%) !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.32);
+  }
+  .dark .dashboard-metric .text-cyan-700, .dark .dashboard-metric .text-red-700, .dark .dashboard-metric .text-teal-700 {
+    color: #aeefff !important;
+  }
+  .dark .dashboard-metric .text-red-700 {
+    color: #ffb3b3 !important;
+  }
+  .dark .dashboard-metric .text-cyan-400, .dark .dashboard-metric .text-red-400, .dark .dashboard-metric .text-teal-400 {
+    color: #7de2ff !important;
+  }
+  .dark .dashboard-metric .bg-gradient-to-r {
+    background: linear-gradient(90deg, #183a4a 0%, #1a3d4d 100%) !important;
+  }
+/* Card entrance and hover animations */
+.card-animate {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  animation: cardIn 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+.card-animate-delayed {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  animation: cardIn 0.7s 0.2s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+@keyframes cardIn {
+  0% { opacity: 0; transform: translateY(32px) scale(0.98); }
+  100% { opacity: 1; transform: none; }
+}
+.glass-card {
+  /* ...existing styles... */
+  transition: box-shadow 0.18s, border-color 0.18s, background 0.18s, transform 0.18s;
+}
+.glass-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 12px 36px 0 rgba(60, 180, 255, 0.18), 0 2px 8px 0 rgba(60,60,60,0.08);
+}
+/* Dark mode overrides for cards */
+.dark .glass-card {
+  background: linear-gradient(135deg, hsl(220, 16%, 18%) 90%, hsl(220, 16%, 22%) 100%);
+  color: hsl(var(--card-foreground));
+  border: 1.5px solid hsl(220, 16%, 28%);
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.22), 0 1.5px 6px 0 rgba(0,0,0,0.10);
+}
+.dark .glass-card:hover {
+  background: linear-gradient(135deg, hsl(220, 16%, 22%) 80%, hsl(var(--primary))/10 100%);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 8px 36px 0 rgba(0,180,255,0.22), 0 2px 8px 0 rgba(0,0,0,0.14);
+}
+/* Grand dashboard launch animation */
+.dashboard-grand {
+  animation: dashboardGrand 1.2s cubic-bezier(0.22,0.61,0.36,1);
+}
+@keyframes dashboardGrand {
+  0% { opacity: 0; transform: scale(0.92) rotateX(12deg); filter: blur(8px); }
+  60% { opacity: 1; transform: scale(1.03) rotateX(0deg); filter: blur(0); }
+ 100% { opacity: 1; transform: none; filter: none; }
+}
 /** @import must precede all other statements */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap");
@@ -14,45 +77,45 @@
   */
   :root {
     /* CyberNavy theme: deep navy/charcoal base with cyan/teal accents */
-    --background: 217 33% 6%; /* deep navy */
-    --foreground: 210 40% 96%;
+  --background: 190 60% 94%; /* modern cyan-tinted blue */
+  --foreground: 222 47% 10%; /* slightly lighter for cyan bg */
 
-    --card: 216 24% 12%;
-    --card-foreground: 210 40% 96%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
 
-    --popover: 216 24% 12%;
-    --popover-foreground: 210 40% 96%;
+  --popover: 0 0% 99%;
+  --popover-foreground: 222 47% 11%;
 
-    --primary: 189 94% 43%; /* cyan */
-    --primary-foreground: 210 40% 98%;
+  --primary: 200 98% 48%; /* modern blue */
+  --primary-foreground: 0 0% 100%;
 
-    --secondary: 173 70% 34%; /* teal */
-    --secondary-foreground: 210 40% 98%;
+  --secondary: 162 100% 40%; /* modern teal */
+  --secondary-foreground: 0 0% 100%;
 
-    --muted: 217 22% 18%;
-    --muted-foreground: 214 18% 72%;
+  --muted: 220 16% 94%;
+  --muted-foreground: 222 20% 28%;
 
-    --accent: 189 94% 43%;
-    --accent-foreground: 210 40% 98%;
+  --accent: 265 82% 62%; /* modern purple accent */
+  --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
 
-    --border: 217 22% 22%;
-    --input: 217 22% 22%;
-    --ring: 189 94% 43%;
+  --border: 220 16% 88%;
+  --input: 220 16% 88%;
+  --ring: 189 94% 43%;
 
-    --radius: 0.75rem; /* 12px */
+  --radius: 0.75rem; /* 12px */
 
-    /* Sidebar tokens */
-    --sidebar-background: 220 26% 8%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 189 94% 43%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217 22% 16%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 22% 22%;
-    --sidebar-ring: 189 94% 43%;
+  /* Sidebar tokens */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 222 47% 11%;
+  --sidebar-primary: 189 94% 43%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 16% 90%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-border: 210 16% 85%;
+  --sidebar-ring: 189 94% 43%;
   }
 
   .dark {
@@ -114,6 +177,126 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/70 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/30 rounded-lg;
+    background: linear-gradient(120deg, hsl(var(--card)) 80%, hsl(var(--muted)) 100%);
+    color: hsl(var(--card-foreground));
+    border-radius: 1.1rem;
+    border: 1.5px solid hsl(var(--border));
+    box-shadow: 0 6px 32px 0 rgba(60, 80, 120, 0.10), 0 1.5px 6px 0 rgba(60,60,60,0.03);
+    transition: box-shadow 0.22s, border-color 0.22s, background 0.22s, transform 0.18s;
+    backdrop-filter: blur(8px);
+    will-change: transform, box-shadow, background;
   }
+  .glass-card:hover {
+    background: linear-gradient(120deg, hsl(var(--card)) 70%, hsl(var(--primary))/10 100%);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 16px 48px 0 rgba(60, 180, 255, 0.16), 0 2px 8px 0 rgba(60,60,60,0.07);
+    transform: translateY(-6px) scale(1.025);
+    filter: none;
+  }
+  /* Card content fade-in */
+  .glass-card > * {
+    opacity: 0;
+    animation: cardContentIn 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards;
+    animation-delay: 0.18s;
+  }
+  .glass-card:hover > * {
+    animation-delay: 0s;
+  }
+  @keyframes cardContentIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+  /* Dark mode overrides for cards and backgrounds */
+  .dark {
+    --background: 222 30% 8%;
+    --card: 220 16% 16%;
+    --card-foreground: 210 40% 98%;
+    --muted: 220 16% 12%;
+    --border: 220 16% 22%;
+    --input: 220 16% 22%;
+    --primary: 200 98% 60%;
+    --secondary: 162 100% 32%;
+    --accent: 265 82% 62%;
+  }
+  .dark .glass-card {
+    background: linear-gradient(120deg, hsl(220, 16%, 13%) 80%, hsl(220, 16%, 18%) 100%);
+    color: hsl(var(--card-foreground));
+    border: 1.5px solid hsl(220, 16%, 28%);
+    box-shadow: 0 8px 36px 0 rgba(0,0,0,0.38), 0 1.5px 6px 0 rgba(0,0,0,0.18);
+  }
+  .dark .glass-card:hover {
+    background: linear-gradient(120deg, hsl(220, 16%, 16%) 70%, hsl(var(--primary))/18 100%);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 20px 56px 0 rgba(0,180,255,0.22), 0 2px 8px 0 rgba(0,0,0,0.22);
+    filter: none;
+    transform: translateY(-6px) scale(1.025);
+  }
+  /* Inner dashboard cards in dark mode */
+  .dark .dashboard-metric {
+    background: linear-gradient(120deg, hsl(220, 16%, 18%) 90%, hsl(220, 16%, 22%) 100%) !important;
+    color: hsl(var(--card-foreground));
+    border: 1.5px solid hsl(220, 16%, 28%) !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.22);
+  }
+  .legal-card {
+    background: linear-gradient(120deg, rgba(200, 235, 255, 0.97) 80%, rgba(180, 225, 245, 0.97) 100%);
+    border: 1.5px solid hsl(var(--border));
+    box-shadow: 0 4px 24px 0 rgba(60, 80, 120, 0.10), 0 1.5px 6px 0 rgba(60,60,60,0.03);
+    backdrop-filter: blur(8px);
+    border-radius: 1.1rem;
+    transition: box-shadow 0.18s, border-color 0.18s, background 0.18s, transform 0.18s;
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .legal-card:hover {
+    box-shadow: 0 12px 36px 0 rgba(60, 180, 255, 0.13), 0 2px 8px 0 rgba(60,60,60,0.08);
+    transform: translateY(-4px) scale(1.015);
+  }
+  .dark .legal-card {
+    background: linear-gradient(120deg, rgba(24,34,54,0.92) 80%, rgba(30,40,60,0.98) 100%);
+    border: 1.5px solid hsl(220, 16%, 28%);
+    box-shadow: 0 8px 36px 0 rgba(0,0,0,0.22), 0 1.5px 6px 0 rgba(0,0,0,0.10);
+  }
+  /* Remove animation from cookie consent buttons */
+  .cookie-consent-cta, .cookie-consent-dismiss {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Remove hover/active/focus for Accept button in cookie consent */
+.cookie-consent-accept,
+.cookie-consent-accept:hover,
+.cookie-consent-accept:focus,
+.cookie-consent-accept:active {
+  background: linear-gradient(to top right, #06b6d4, #14b8a6) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+/* Remove hover/transform animation for cookie consent card */
+.cookie-consent-card,
+.cookie-consent-card:hover,
+.cookie-consent-card:focus {
+  transition: none !important;
+  transform: none !important;
+  box-shadow: 0 4px 24px 0 rgba(60, 80, 120, 0.10), 0 1.5px 6px 0 rgba(60,60,60,0.03) !important;
+}
+
+/* Center cookie consent card and add fade-in animation */
+.cookie-consent-card {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  animation: fadeInCookie 0.7s cubic-bezier(0.22,0.61,0.36,1);
+}
+@keyframes fadeInCookie {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 }

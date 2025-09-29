@@ -1,13 +1,16 @@
 import { Bell, Moon, Sun, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AuthButtons from "@/components/auth/AuthButtons";
 
 export function SiteHeader() {
   const [dark, setDark] = useState<boolean>(false);
-  const [user, setUser] = useState<{ email?: string; username?: string; isAdmin?: boolean } | null>(null);
+  const [user, setUser] = useState<{ email?: string; username?: string; name?: string; isAdmin?: boolean } | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -28,21 +31,33 @@ export function SiteHeader() {
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
+  // Always re-check auth state on route change and browser navigation (back/forward)
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
-      .then(async (res) => {
-        let data = null;
-        try {
-          data = res.ok ? await res.json() : null;
-        } catch (e) {
-          data = null;
-        }
-        console.log("[SiteHeader] /api/auth/me response:", data, "status:", res.status);
-        return data;
-      })
-      .then((data) => setUser(data))
-      .catch(() => setUser(null));
-  }, []);
+    const checkAuth = () => {
+      fetch("/api/auth/me", { credentials: "include" })
+        .then(async (res) => {
+          let data = null;
+          try {
+            data = res.ok ? await res.json() : null;
+          } catch (e) {
+            data = null;
+          }
+          return data;
+        })
+        .then((data) => {
+          setUser(data);
+          setAuthChecked(true);
+        })
+        .catch(() => {
+          setUser(null);
+          setAuthChecked(true);
+        });
+    };
+    setAuthChecked(false);
+    checkAuth();
+    window.addEventListener("popstate", checkAuth);
+    return () => window.removeEventListener("popstate", checkAuth);
+  }, [location.pathname]);
   return (
     <header
       className={cn(
@@ -118,9 +133,9 @@ export function SiteHeader() {
             </Button>
           </a>
           <div className="hidden sm:block h-6 w-px bg-white/10" />
-          {user?.email ? (
+          {!authChecked ? null : user?.email ? (
             <>
-              <span className="text-xs text-foreground/70 mr-2">{user.username || user.email}</span>
+              <span className="text-xs text-foreground/70 mr-2">{user.name || user.username || user.email}</span>
               <div className="relative inline-block text-left">
                 <button
                   className="inline-flex items-center px-2 py-1 text-sm font-medium rounded hover:bg-white/10 focus:outline-none"

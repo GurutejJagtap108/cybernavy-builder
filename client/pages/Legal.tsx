@@ -2,13 +2,14 @@ import React from "react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import PlaceholderPage from "@/components/common/PlaceholderPage";
+import { Card } from "@/components/common/Card";
+import { SiteShell } from "@/components/layout/SiteShell";
 
 const Legal: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-950 to-black text-slate-100">
+    <SiteShell>
       <div className="mx-auto max-w-6xl px-6 py-20">
-        <div className="rounded-2xl bg-gradient-to-r from-white/5 via-white/3 to-white/5 p-8 shadow-lg backdrop-blur-md ring-1 ring-white/6">
+  <div className="glass-card p-8 overflow-hidden rounded-md">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h1 className="text-4xl font-extrabold tracking-tight">Legal & Terms</h1>
@@ -18,10 +19,10 @@ const Legal: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="rounded-md bg-gradient-to-tr from-indigo-600 to-sky-500 px-4 py-2 text-sm font-medium text-white shadow-md transform transition-transform hover:-translate-y-1">
+              <div className="rounded-md bg-primary/90 text-primary-foreground px-4 py-2 text-sm font-medium shadow-md transform transition-transform hover:-translate-y-1">
                 Updated: Sep 2025
               </div>
-              <div className="hidden md:block rounded-md border border-white/6 px-4 py-2 text-sm text-slate-200/80">
+              <div className="hidden md:block rounded-md border border-border px-4 py-2 text-sm text-foreground/80">
                 Need help? <a className="underline" href="/contact">Contact legal</a>
               </div>
             </div>
@@ -30,7 +31,7 @@ const Legal: React.FC = () => {
 
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <div className="rounded-xl bg-muted p-6 shadow-sm">
+            <Card className="p-6 overflow-hidden rounded-md shadow-sm">
               <Tabs defaultValue="terms">
                 <TabsList>
                   <TabsTrigger value="terms">Terms</TabsTrigger>
@@ -39,7 +40,7 @@ const Legal: React.FC = () => {
                 </TabsList>
 
                 <TabsContent value="terms">
-                  <article className="prose max-w-none text-slate-200">
+                  <article className="prose max-w-none text-foreground">
                     <h2 className="mt-0">Terms of Service</h2>
                     <p>
                       Welcome to CyberNavy. By using our services, you agree to these terms. Use must be lawful, respectful, and compliant with all applicable laws.
@@ -56,7 +57,7 @@ const Legal: React.FC = () => {
                 </TabsContent>
 
                 <TabsContent value="privacy">
-                  <article className="prose max-w-none text-slate-200">
+                  <article className="prose max-w-none text-foreground">
                     <h2 className="mt-0">Privacy Policy</h2>
                     <p>
                       We collect only the minimum personal information required to operate the service: account email, usage metadata, and billing details if you purchase a paid plan.
@@ -73,7 +74,7 @@ const Legal: React.FC = () => {
                 </TabsContent>
 
                 <TabsContent value="copyright">
-                  <article className="prose max-w-none text-slate-200">
+                  <article className="prose max-w-none text-foreground">
                     <h2 className="mt-0">Copyright & DMCA</h2>
                     <p>
                       If you believe your copyrighted work has been used without permission, notify our DMCA agent. Include a description of the work, the infringing material, and a statement under penalty of perjury.
@@ -88,9 +89,9 @@ const Legal: React.FC = () => {
                   </article>
                 </TabsContent>
               </Tabs>
-            </div>
+            </Card>
 
-            <div className="mt-6 rounded-xl bg-muted p-6 shadow-sm">
+            <Card className="mt-6 p-6 overflow-hidden rounded-md shadow-sm">
               <h3 className="text-xl font-semibold">Frequently asked legal questions</h3>
               <Accordion type="single" collapsible className="mt-4">
                 <AccordionItem value="a1">
@@ -112,30 +113,30 @@ const Legal: React.FC = () => {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </div>
+            </Card>
           </div>
 
           <aside className="space-y-6">
-            <div className="rounded-xl bg-gradient-to-b from-white/3 to-white/2 p-4 shadow-inner">
-              <h4 className="text-sm font-medium text-slate-300">Quick summary</h4>
-              <ul className="mt-3 list-inside list-disc text-sm text-slate-200/90">
+            <Card className="p-4 overflow-hidden rounded-md shadow-inner">
+              <h4 className="text-sm font-medium text-foreground/80">Quick summary</h4>
+              <ul className="mt-3 list-inside list-disc text-sm text-foreground/90">
                 <li>Be lawful and respectful</li>
                 <li>We protect your data</li>
                 <li>DMCA procedures available</li>
               </ul>
-            </div>
+            </Card>
 
-            <div className="rounded-xl bg-muted p-4 text-center">
+            <Card className="p-4 overflow-hidden rounded-md text-center">
               <div className="mb-3">
                 <Skeleton className="mx-auto h-12 w-12 rounded-full" />
               </div>
-              <div className="text-sm text-slate-300">Legal Team</div>
-              <div className="mt-2 text-xs text-slate-400">legal@cybernavy.example</div>
-            </div>
+              <div className="text-sm text-foreground/80">Legal Team</div>
+              <div className="mt-2 text-xs text-foreground/60">legal@cybernavy.example</div>
+            </Card>
           </aside>
         </div>
       </div>
-    </div>
+  </SiteShell>
   );
 };
 

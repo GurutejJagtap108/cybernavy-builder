@@ -20,9 +20,19 @@ import {
   Users,
   Webhook,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
-const nav = [
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+
+
+
+type NavItem = {
+  label: string;
+  href: string;
+  icon: any;
+  badge?: number;
+};
+const baseNav: NavItem[] = [
   { label: "Overview", href: "/app", icon: Gauge },
   { label: "Threats", href: "/app/threats", icon: Shield, badge: 8 },
   { label: "Detection", href: "/app/detection", icon: Siren },
@@ -32,12 +42,20 @@ const nav = [
   { label: "Incidents", href: "/app/incidents", icon: Activity },
   { label: "Network", href: "/app/network", icon: Network },
   { label: "Reports", href: "/app/reports", icon: FileText },
-  { label: "Admin & RBAC", href: "/app/admin", icon: Users },
   { label: "Settings", href: "/app/settings", icon: Cog },
   { label: "Integrations", href: "/app/integrations", icon: Webhook },
 ];
+const adminNav: NavItem = { label: "Admin & RBAC", href: "/app/admin", icon: Users };
 
 export function AppSidebar({ current }: { current?: string }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    fetch("/api/auth/me", { credentials: "include" })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setIsAdmin(!!data?.isAdmin))
+      .catch(() => setIsAdmin(false));
+  }, []);
+  const nav = isAdmin ? [...baseNav, adminNav] : baseNav;
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col gap-2 border-r border-sidebar-border bg-sidebar p-3">
       <div className="text-xs uppercase tracking-wide text-sidebar-foreground/60 px-2">

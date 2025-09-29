@@ -9,7 +9,7 @@ export default function CookieConsent() {
   }, []);
   if (!visible) return null;
   return (
-    <div className="fixed bottom-4 inset-x-4 md:left-1/2 md:-translate-x-1/2 md:inset-x-auto md:w-[560px] z-50 glass-card p-4 md:p-5">
+  <div className="fixed bottom-4 inset-x-4 md:left-1/2 md:-translate-x-1/2 md:inset-x-auto md:w-[560px] z-50 glass-card cookie-consent-card p-4 md:p-5">
       <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
         <p className="text-sm text-foreground/80">
           We use minimal cookies to analyze usage. No tracking across sites. See
@@ -34,7 +34,7 @@ export default function CookieConsent() {
               localStorage.setItem("cn_cookie_consent", "accepted");
               setVisible(false);
             }}
-            className="bg-gradient-to-tr from-cyan-500 to-teal-400 text-white"
+            className="bg-gradient-to-tr from-cyan-500 to-teal-400 text-white cookie-consent-accept"
           >
             Accept
           </Button>

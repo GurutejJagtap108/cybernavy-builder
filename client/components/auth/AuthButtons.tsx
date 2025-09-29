@@ -12,7 +12,7 @@ import {
 
 export default function AuthButtons() {
   const [authed, setAuthed] = useState(false);
-  const [open, setOpen] = useState<"login" | "signup" | "forgot" | "reset" | null>(null);
+  const [open, setOpen] = useState<"login" | "signup" | "forgot" | "reset" | "otp" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [emailForReset, setEmailForReset] = useState("");
   const [resetToken, setResetToken] = useState("");
@@ -20,6 +20,10 @@ export default function AuthButtons() {
   const [forgotSent, setForgotSent] = useState(false);
   const [searchParams] = useSearchParams();
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpSuccess, setOtpSuccess] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include" })
@@ -109,26 +113,47 @@ export default function AuthButtons() {
     e.preventDefault();
     setError(null);
     const data = new FormData(e.currentTarget);
+    const email = data.get("email") as string;
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
-        username: data.get("username"),
-        email: data.get("email"),
+        name: data.get("username"),
+        email,
         password: data.get("password"),
       }),
     });
     if (res.ok) {
       setAuthed(false);
       setSignupSuccess(true);
-      setOpen(null); // Close signup dialog immediately
-      setTimeout(() => {
-        setOpen("login");
-      }, 1800);
+      setOtpEmail(email);
+      setOpen("otp");
     } else {
       const data = await res.json().catch(() => ({}));
       setError(data.error || "Registration failed");
+    }
+  };
+
+  const doVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setOtpError(null);
+    setOtpSuccess(false);
+    const res = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: otpEmail, otp }),
+    });
+    if (res.ok) {
+      setOtpSuccess(true);
+      setTimeout(() => {
+        setOpen("login");
+        setOtp("");
+        setOtpSuccess(false);
+      }, 1500);
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setOtpError(data.error || "Invalid OTP");
     }
   };
 
@@ -198,9 +223,7 @@ export default function AuthButtons() {
             open={open === "signup"}
             onOpenChange={(o) => {
               setError(null);
-              if (o) {
-                setSignupSuccess(false);
-              }
+              if (o) setSignupSuccess(false);
               setOpen(o ? "signup" : null);
             }}
           >
@@ -216,7 +239,7 @@ export default function AuthButtons() {
                   name="username"
                   type="text"
                   required
-                  placeholder="Username"
+                  placeholder="Name"
                   className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
                 />
                 <input
@@ -243,6 +266,32 @@ export default function AuthButtons() {
               </form>
             </DialogContent>
           </Dialog>
+          {/* OTP Verification Dialog */}
+          <Dialog open={open === "otp"} onOpenChange={(o) => setOpen(o ? "otp" : null)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Verify your email</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={doVerifyOtp} className="space-y-3">
+                <input
+                  name="otp"
+                  type="text"
+                  required
+                  maxLength={6}
+                  pattern="[0-9]{6}"
+                  placeholder="Enter 6-digit OTP sent to your email"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 tracking-widest text-center"
+                  value={otp}
+                  onChange={e => setOtp(e.target.value)}
+                />
+                {otpError && <div className="text-red-500 text-sm">{otpError}</div>}
+                {otpSuccess && <div className="text-green-600 text-sm">Account verified! You can now log in.</div>}
+                <Button type="submit" className="w-full bg-cyan-500 text-white">
+                  Verify
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
           {/* Forgot Password Dialog */}
           <Dialog open={open === "forgot"} onOpenChange={(o) => setOpen(o ? "forgot" : null)}>
             <DialogContent>
@@ -250,14 +299,14 @@ export default function AuthButtons() {
                 <DialogTitle>Forgot Password</DialogTitle>
               </DialogHeader>
               {forgotSent ? (
-                <div className="text-green-600">If this email exists, a reset link has been sent.</div>
+                <div className="text-green-600">If this email exists, a reset link has been sent. Please check your inbox and spam folder. The link will open a password reset dialog.</div>
               ) : (
                 <form onSubmit={doForgot} className="space-y-3">
                   <input
                     name="email"
                     type="email"
                     required
-                    placeholder="Your Gmail address"
+                    placeholder="Your email address"
                     className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
                   />
                   {error && <div className="text-red-500 text-sm">{error}</div>}

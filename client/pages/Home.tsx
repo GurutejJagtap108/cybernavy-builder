@@ -1,7 +1,27 @@
 import { SiteShell } from "@/components/layout/SiteShell";
 import CookieConsent from "@/components/common/CookieConsent";
 import { Button } from "@/components/ui/button";
-import { Shield, Sparkles, Gauge, Zap, Lock, FileText } from "lucide-react";
+import { Shield, Sparkles, Gauge, Zap, Lock, FileText, Activity } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+// Animated counter for numbers
+function AnimatedNumber({ value, duration = 1200, className = "" }: { value: number, duration?: number, className?: string }) {
+  const [display, setDisplay] = useState(0);
+  const raf = useRef<number>();
+  useEffect(() => {
+    let start: number | null = null;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setDisplay(Math.floor(progress * value));
+      if (progress < 1) raf.current = requestAnimationFrame(animate);
+      else setDisplay(value);
+    };
+    raf.current = requestAnimationFrame(animate);
+    return () => raf.current && cancelAnimationFrame(raf.current);
+  }, [value, duration]);
+  return <span className={className}>{display}</span>;
+}
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useSeo } from "@/lib/seo";
 
@@ -37,14 +57,14 @@ export default function Home() {
             automation, and global teams.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <a href="/app" className="inline-flex">
+            <Link to="/app" className="inline-flex">
               <Button
                 onClick={() => track("cta_click", { cta: "get_started" })}
                 className="h-11 px-6 bg-gradient-to-tr from-cyan-500 to-teal-400 text-white shadow-lg shadow-cyan-900/30"
               >
                 Launch Dashboard
               </Button>
-            </a>
+            </Link>
             <a href="/docs" className="inline-flex">
               <Button
                 variant="outline"
@@ -66,32 +86,33 @@ export default function Home() {
           </div>
         </div>
         <div className="relative">
-          <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-500/20 to-teal-400/10 blur-2xl rounded-3xl" />
-          <div className="relative rounded-2xl p-1 bg-gradient-to-tr from-cyan-600/50 to-teal-500/50">
-            <div className="rounded-2xl p-5 bg-background/80 backdrop-blur-xl border border-white/10">
+          <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-400/15 to-teal-300/10 blur-2xl rounded-3xl" />
+          <div className="relative rounded-2xl p-1 bg-gradient-to-tr from-cyan-100/60 to-white/80 shadow-xl">
+            <div className="rounded-2xl p-6 bg-white/80 backdrop-blur-xl border-2 border-cyan-200/60 shadow-lg flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <div className="text-sm text-foreground/70">
-                    Security Score
+                <div className="p-4 rounded-xl bg-cyan-50/80 border border-cyan-100/80 shadow-sm flex flex-col items-start">
+                  <div className="flex items-center gap-2 text-cyan-700 text-sm font-medium">
+                    <Shield className="size-4 text-cyan-400" /> Security Score
                   </div>
-                  <div className="text-3xl font-bold">86</div>
+                  <AnimatedNumber value={86} className="text-4xl font-extrabold mt-2 text-cyan-700" />
                 </div>
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <div className="text-sm text-foreground/70">
-                    Active Threats
+                <div className="p-4 rounded-xl bg-red-50/80 border border-red-100/80 shadow-sm flex flex-col items-start">
+                  <div className="flex items-center gap-2 text-red-700 text-sm font-medium">
+                    <Zap className="size-4 text-red-400" /> Active Threats
                   </div>
-                  <div className="text-3xl font-bold">12</div>
+                  <AnimatedNumber value={12} className="text-4xl font-extrabold mt-2 text-red-700" />
                 </div>
-                <div className="col-span-2 p-4 rounded-lg bg-white/5 border border-white/10">
-                  <div className="text-sm text-foreground/70 mb-2">
-                    Live Events
+                <div className="col-span-2 p-4 rounded-xl bg-gradient-to-r from-cyan-50/80 to-teal-50/80 border border-cyan-100/60 shadow flex flex-col items-start animate-pulse-slow">
+                  <div className="flex items-center gap-2 text-teal-700 text-sm font-medium mb-2">
+                    <Activity className="size-4 text-teal-400 animate-pulse" /> Live Events
                   </div>
-                  <div className="h-28 rounded-md bg-gradient-to-b from-white/10 to-transparent" />
+                  <div className="h-8 w-full rounded bg-gradient-to-r from-cyan-200/40 via-white/60 to-teal-200/40 animate-gradient-move" />
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </section>
 
       <section className="mt-16 md:mt-24">

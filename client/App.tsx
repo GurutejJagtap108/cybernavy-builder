@@ -1,3 +1,32 @@
+import ProfilePage from "./pages/Profile";
+import React, { useEffect, useState } from "react";
+// ErrorBoundary component to catch runtime errors
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: any }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, info: any) {
+    // Log error to an error reporting service if needed
+    console.error("[ErrorBoundary] Caught error:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-background text-center p-8">
+          <h1 className="text-3xl font-bold mb-4 text-red-500">Something went wrong</h1>
+          <p className="mb-4 text-foreground/70">An unexpected error occurred. Please try refreshing the page or contact support if the problem persists.</p>
+          <pre className="bg-white/10 rounded p-4 text-left text-xs max-w-xl overflow-x-auto mb-4">{String(this.state.error)}</pre>
+          <button className="px-4 py-2 bg-cyan-500 text-white rounded" onClick={() => window.location.reload()}>Reload</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import "./global.css";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -13,95 +42,119 @@ import NotFound from "./pages/NotFound";
 import PlaceholderPage from "@/components/common/PlaceholderPage";
 import Legal from "./pages/Legal";
 import AppDashboard from "@/pages/AppDashboard";
+import { PageFade } from "@/components/common/PageFade";
 import { I18nProvider } from "@/i18n/i18n";
 
 const queryClient = new QueryClient();
 
 function Protected({ children }: { children: React.ReactNode }) {
-  // SSO-ready guard placeholder
-  const authed = localStorage.getItem("cn_authed") === "1";
-  if (!authed)
+  const [loading, setLoading] = useState(true);
+  const [authed, setAuthed] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetch("/api/auth/me", { credentials: "include" })
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (!cancelled) {
+          setAuthed(!!data?.email);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAuthed(false);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-[40vh] text-lg">Loading...</div>;
+  }
+  if (!authed) {
     return (
       <div className="mx-auto max-w-[800px] p-6">
         <PlaceholderPage
           title="Sign in required"
-          description="This area is protected. Hook up your SSO provider here. For now, click the button to simulate sign in."
+          description="This area is protected. Please sign in to continue."
+          showAuthButtons
         />
-        <div className="mt-4">
-          <button
-            onClick={() => {
-              localStorage.setItem("cn_authed", "1");
-              location.reload();
-            }}
-            className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
-          >
-            Simulate SSO Sign in
-          </button>
-        </div>
       </div>
     );
+  }
   return <>{children}</>;
 }
 
+
+
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <I18nProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route
-              path="/solutions"
-              element={<PlaceholderPage title="Solutions" />}
-            />
-            <Route
-              path="/pricing"
-              element={<PlaceholderPage title="Pricing" />}
-            />
-            <Route path="/docs" element={<Docs />} />
-            <Route
-              path="/blog"
-              element={<PlaceholderPage title="Blog & Resources" />}
-            />
-            <Route path="/company" element={<Company />} />
-            <Route path="/legal" element={<Legal />} />
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/profile"
+                element={
+                  <PageFade>
+                    <Protected>
+                      <ProfilePage />
+                    </Protected>
+                  </PageFade>
+                }
+              />
+              <Route path="/" element={<PageFade><Index /></PageFade>} />
+              <Route
+                path="/solutions"
+                element={<PageFade><PlaceholderPage title="Solutions" /></PageFade>}
+              />
+              <Route
+                path="/pricing"
+                element={<PageFade><PlaceholderPage title="Pricing" /></PageFade>}
+              />
+              <Route path="/docs" element={<PageFade><Docs /></PageFade>} />
+              <Route
+                path="/blog"
+                element={<PageFade><PlaceholderPage title="Blog & Resources" /></PageFade>}
+              />
+              <Route path="/company" element={<PageFade><Company /></PageFade>} />
+              <Route path="/legal" element={<PageFade><Legal /></PageFade>} />
 
-            <Route
-              path="/app"
-              element={
-                <Protected>
-                  <AppDashboard />
-                </Protected>
-              }
-            />
-            <Route
-              path="/app/:rest"
-              element={
-                <Protected>
-                  <AppDashboard />
-                </Protected>
-              }
-            />
+              <Route
+                path="/app"
+                element={
+                  <PageFade>
+                    <Protected>
+                      <AppDashboard />
+                    </Protected>
+                  </PageFade>
+                }
+              />
+              <Route
+                path="/app/:rest"
+                element={
+                  <PageFade>
+                    <Protected>
+                      <AppDashboard />
+                    </Protected>
+                  </PageFade>
+                }
+              />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </I18nProvider>
-  </QueryClientProvider>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<PageFade><NotFound /></PageFade>} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </I18nProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
-const container = document.getElementById("root")! as HTMLElement;
-const rootKey = "__CYBERNAVY_REACT_ROOT__";
-// reuse root during HMR to avoid createRoot being called multiple times
-if (!(window as any)[rootKey]) {
-  (window as any)[rootKey] = createRoot(container);
-}
-(window as any)[rootKey].render(<App />);
+export default App;
 
-if (import.meta.hot) {
-  import.meta.hot.accept();
-}
+

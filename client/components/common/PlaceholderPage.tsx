@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
 
+import AuthButtons from "@/components/auth/AuthButtons";
+
 export default function PlaceholderPage({
   title,
   description,
+  showAuthButtons,
 }: {
   title: string;
   description?: string;
+  showAuthButtons?: boolean;
 }) {
   return (
     <div className="rounded-xl border border-white/10 p-8 glass-card">
@@ -14,11 +18,17 @@ export default function PlaceholderPage({
         {description ??
           "This page is scaffolded. Continue prompting to generate full content and connect real backends."}
       </p>
-      <a href="/app" className="inline-flex">
-        <Button className="bg-gradient-to-tr from-cyan-500 to-teal-400 text-white">
-          Go to Dashboard
-        </Button>
-      </a>
+      {showAuthButtons ? (
+        <div className="flex gap-4 mt-4">
+          <AuthButtons />
+        </div>
+      ) : (
+        <a href="/app" className="inline-flex">
+          <Button className="bg-gradient-to-tr from-cyan-500 to-teal-400 text-white">
+            Go to Dashboard
+          </Button>
+        </a>
+      )}
     </div>
   );
 }

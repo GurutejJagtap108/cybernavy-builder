@@ -29,7 +29,7 @@ export default function Company() {
   return (
     <SiteShell>
       <div className="grid gap-8">
-        <section className="bg-gradient-to-r from-cyan-800/30 to-teal-700/10 rounded-xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-6">
+  <section className="glass-card p-8 md:p-12 flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
             <h1 className="text-4xl md:text-5xl font-extrabold">CyberNavy </h1>
             <p className="text-foreground/70 mt-4 max-w-2xl">Developed by Omkar Jagtap and Gurutej Jagtap — focused on secure, modern web apps that ship fast.</p>
@@ -39,7 +39,7 @@ export default function Company() {
             </div>
           </div>
           <div className="w-full md:w-1/3">
-            <Card className="p-4 shadow-lg">
+            <Card className="p-4 overflow-hidden rounded-md">
               <div className="flex items-center gap-3">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src="/placeholder.svg" alt="Omkar" />
@@ -52,7 +52,7 @@ export default function Company() {
               </div>
               <div className="mt-4 border-t border-white/5 pt-4 text-sm text-foreground/70">Creator, contributor, and maintainer of the CyberNavy starter.</div>
             </Card>
-            <Card className="p-4 mt-4 shadow-lg">
+            <Card className="p-4 mt-4 overflow-hidden rounded-md">
               <div className="flex items-center gap-3">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src="/placeholder.svg" alt="Gurutej" />
@@ -68,8 +68,8 @@ export default function Company() {
           </div>
         </section>
 
-        <section className="grid gap-6 md:grid-cols-3">
-          <Card className="p-6 hover:scale-[1.02] transition-transform">
+  <section className="grid gap-6 md:grid-cols-3">
+          <Card className="p-6 overflow-hidden rounded-md hover:scale-[1.02] transition-transform">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-cyan-600/10 rounded-md text-cyan-400"><ShieldCheck /></div>
               <div>
@@ -79,7 +79,7 @@ export default function Company() {
             </div>
           </Card>
 
-          <Card className="p-6 hover:scale-[1.02] transition-transform">
+          <Card className="p-6 overflow-hidden rounded-md hover:scale-[1.02] transition-transform">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-teal-600/10 rounded-md text-teal-400"><Eye /></div>
               <div>
@@ -89,7 +89,7 @@ export default function Company() {
             </div>
           </Card>
 
-          <Card className="p-6 hover:scale-[1.02] transition-transform">
+          <Card className="p-6 overflow-hidden rounded-md hover:scale-[1.02] transition-transform">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-amber-600/10 rounded-md text-amber-400"><Zap /></div>
               <div>
@@ -101,7 +101,7 @@ export default function Company() {
         </section>
 
         <section>
-          <Card className="p-6">
+          <Card className="p-6 overflow-hidden rounded-md">
             <h3 className="font-semibold">Contact</h3>
             <p className="text-foreground/70 mt-2">Email: <a href="mailto:support@cybernavy.com" className="text-cyan-400">support@cybernavy.com</a></p>
             <div className="mt-4 flex gap-3">
