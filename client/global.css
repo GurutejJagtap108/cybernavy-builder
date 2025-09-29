@@ -364,4 +364,24 @@ html.dark, body.dark, .dark, .dark html, .dark body, .dark #root, #root.dark {
   background-color: hsl(217 33% 4%) !important;
   color-scheme: dark;
 }
+
+/* Fix white flash during transitions in dark mode */
+.dark .bg-white\/80 {
+  background-color: hsl(220 26% 10%) !important;
+}
+
+.dark .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, hsl(220, 16%, 18%), hsl(220, 16%, 22%)) !important;
+}
+
+/* Ensure dashboard containers have proper dark backgrounds */
+.dark [class*="bg-white"] {
+  background-color: hsl(220 26% 10%) !important;
+}
+
+/* Fix motion components background flash */
+.dark .dashboard-grand {
+  background-color: hsl(217 33% 4%) !important;
+}
+
 /* --- End dark-mode root enforcement --- */

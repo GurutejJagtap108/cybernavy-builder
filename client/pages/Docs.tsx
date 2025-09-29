@@ -75,20 +75,20 @@ export default function Docs() {
       <div className="grid gap-8">
         <section className="grid gap-6 md:grid-cols-2 items-center">
           <div>
-            <h1 className="text-4xl font-extrabold">What is CyberNavy?</h1>
-            <p className="text-foreground/70 mt-2 max-w-2xl">
+            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">What is CyberNavy?</h1>
+            <p className="text-gray-700 dark:text-gray-300 mt-2 max-w-2xl">
               CyberNavy is a cybersecurity project focused on real-time detection, monitoring, and analysis of digital threats. 
                It is designed to help users identify unsafe or malicious content such as harmful images,
                videos, and URLs using AI-powered classification models and APIs..
             </p>
 
-            <h3 className="mt-4 font-semibold">The platform provides</h3>
-            <ul className="list-disc pl-5 text-foreground/70 mt-2">
+            <h3 className="mt-4 font-semibold text-gray-900 dark:text-white">The platform provides</h3>
+            <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 mt-2">
               <li>Threat detection: scans files, images, and URLs to find inappropriate or harmful content.</li>
               <li>Real-time monitoring: continuously analyzes incoming data for potential risks.</li>
               <li>User-friendly dashboard: a clean and interactive interface for managing detections and reports.</li>
             </ul>
-            <p className="text-foreground/70 mt-3">
+            <p className="text-gray-700 dark:text-gray-300 mt-3">
               CyberNavy's mission is to make the digital space safer by providing developers, organizations, and
               individuals with tools to analyze and respond to online threats effectively.
             </p>
@@ -105,8 +105,8 @@ export default function Docs() {
             <div className="mt-8 flex gap-6">
               {metrics.map((m, i) => (
                 <div key={m.label} className="text-center">
-                  <div className="text-3xl font-semibold">{counts[i].toLocaleString()}</div>
-                  <div className="text-sm text-foreground/70">{m.label}</div>
+                  <div className="text-3xl font-semibold text-gray-900 dark:text-white">{counts[i].toLocaleString()}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{m.label}</div>
                 </div>
               ))}
             </div>
@@ -140,9 +140,9 @@ export default function Docs() {
 
         <section id="guides" className="grid gap-6 md:grid-cols-3">
           <Card className="p-6">
-            <h3 className="font-semibold text-lg">Quickstart</h3>
-            <p className="text-foreground/70 mt-2">Run locally, explore routes, and customize the starter.</p>
-            <ol className="mt-3 list-decimal pl-5 text-foreground/70">
+            <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Quickstart</h3>
+            <p className="text-gray-700 dark:text-gray-300 mt-2">Run locally, explore routes, and customize the starter.</p>
+            <ol className="mt-3 list-decimal pl-5 text-gray-700 dark:text-gray-300">
               <li>Install dependencies: <code>pnpm install</code></li>
               <li>Start dev server: <code>pnpm dev</code></li>
               <li>Open the app: <code>/</code> and docs: <code>/docs</code></li>
@@ -151,8 +151,8 @@ export default function Docs() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-semibold text-lg">Key Features</h3>
-            <ul className="mt-2 text-foreground/70 list-disc pl-5">
+            <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Key Features</h3>
+            <ul className="mt-2 text-gray-700 dark:text-gray-300 list-disc pl-5">
               <li>Vite + React SPA with TypeScript</li>
               <li>Integrated Express API for full-stack prototyping</li>
               <li>Shared types and path aliases for consistent dev DX</li>
@@ -162,9 +162,9 @@ export default function Docs() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-semibold text-lg">How to use</h3>
-            <p className="text-foreground/70 mt-2">Practical steps to extend the starter:</p>
-            <ul className="mt-3 text-foreground/70 list-disc pl-5">
+            <h3 className="font-semibold text-lg text-gray-900 dark:text-white">How to use</h3>
+            <p className="text-gray-700 dark:text-gray-300 mt-2">Practical steps to extend the starter:</p>
+            <ul className="mt-3 text-gray-700 dark:text-gray-300 list-disc pl-5">
               <li>Hook up your SSO provider in `server/routes/auth.ts`</li>
               <li>Add API routes under `server/routes` and types in `shared/`</li>
               <li>Use `client/components/ui` to build consistent UIs</li>
@@ -175,9 +175,9 @@ export default function Docs() {
 
         <section id="get-started" className="grid gap-6 md:grid-cols-2 items-start">
           <div>
-            <h2 className="text-2xl font-semibold">Guides & Tutorials</h2>
-            <p className="text-foreground/70 mt-2">Step-by-step walkthroughs for common workflows like auth, moderation, and production builds.</p>
-            <ul className="mt-4 list-disc pl-5 text-foreground/70">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Guides & Tutorials</h2>
+            <p className="text-gray-700 dark:text-gray-300 mt-2">Step-by-step walkthroughs for common workflows like auth, moderation, and production builds.</p>
+            <ul className="mt-4 list-disc pl-5 text-gray-700 dark:text-gray-300">
               <li>Authentication & SSO</li>
               <li>File moderation pipeline</li>
               <li>Building and deploying</li>
@@ -185,8 +185,8 @@ export default function Docs() {
           </div>
           <div>
             <Card className="p-6">
-              <h4 className="font-semibold">Download Starter</h4>
-              <p className="text-foreground/70 mt-2">Download a zip with example configs and CI templates.</p>
+              <h4 className="font-semibold text-gray-900 dark:text-white">Download Starter</h4>
+              <p className="text-gray-700 dark:text-gray-300 mt-2">Download a zip with example configs and CI templates.</p>
               <div className="mt-4">
                 <a href="/" className="inline-flex"><Button>Download</Button></a>
               </div>
@@ -196,8 +196,8 @@ export default function Docs() {
 
         <section className="mt-6">
           <Card className="p-6">
-            <h3 className="font-semibold">Community Projects</h3>
-            <p className="text-foreground/70 mt-2">Showcase of projects built with CyberNavy.</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white">Community Projects</h3>
+            <p className="text-gray-700 dark:text-gray-300 mt-2">Showcase of projects built with CyberNavy.</p>
             <div className="mt-4 grid gap-4 md:grid-cols-3">
               <img src="/placeholder.svg" alt="project" className="w-full h-40 object-cover rounded-md" />
               <img src="/placeholder.svg" alt="project" className="w-full h-40 object-cover rounded-md" />
