@@ -68,6 +68,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Ensure this file is processed by Tailwind CSS (via PostCSS or Vite) and not by a plain CSS parser or linter. 
+If you see "Unknown at rule @tailwind", check your editor or build tool configuration. */
 
 @layer base {
   /**

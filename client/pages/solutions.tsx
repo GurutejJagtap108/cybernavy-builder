@@ -61,7 +61,7 @@ export default function Solutions() {
             <Card key={sol.title} className="bg-slate-950/80 border border-slate-800 shadow-xl rounded-2xl p-8 flex flex-col items-center text-center hover:scale-[1.025] transition-transform">
               {/* Replace with Lucide icons or your own */}
               <div className="mb-4 text-cyan-400">
-                <span className="inline-block w-12 h-12 bg-cyan-900/30 rounded-full flex items-center justify-center">
+                <span className="w-12 h-12 bg-cyan-900/30 rounded-full flex items-center justify-center">
                   <i className={`lucide lucide-${sol.icon} text-3xl`} />
                 </span>
               </div>
