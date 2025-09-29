@@ -40,8 +40,11 @@ import Docs from "./pages/Docs";
 import Company from "./pages/company";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "@/components/common/PlaceholderPage";
+import Solutions from "./pages/solutions";
+import Blog from "./pages/blog";
 import Legal from "./pages/Legal";
 import AppDashboard from "@/pages/AppDashboard";
+import Pricing from "./pages/pricing";
 import { PageFade } from "@/components/common/PageFade";
 import { I18nProvider } from "@/i18n/i18n";
 
@@ -110,16 +113,16 @@ const App = () => (
               <Route path="/" element={<PageFade><Index /></PageFade>} />
               <Route
                 path="/solutions"
-                element={<PageFade><PlaceholderPage title="Solutions" /></PageFade>}
+                element={<PageFade><Solutions /></PageFade>}
               />
               <Route
                 path="/pricing"
-                element={<PageFade><PlaceholderPage title="Pricing" /></PageFade>}
+                element={<PageFade><Pricing /></PageFade>}
               />
               <Route path="/docs" element={<PageFade><Docs /></PageFade>} />
               <Route
                 path="/blog"
-                element={<PageFade><PlaceholderPage title="Blog & Resources" /></PageFade>}
+                element={<PageFade><Blog /></PageFade>}
               />
               <Route path="/company" element={<PageFade><Company /></PageFade>} />
               <Route path="/legal" element={<PageFade><Legal /></PageFade>} />

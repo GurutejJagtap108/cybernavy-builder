@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export default function AuthButtons() {
+export default function AuthButtons({ open: externalOpen, onOpenChange }: {
+  open?: "login" | "signup" | null,
+  onOpenChange?: (v: "login" | "signup" | null) => void
+} = {}) {
   const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState<"login" | "signup" | "forgot" | "reset" | "otp" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +40,20 @@ export default function AuthButtons() {
       setOpen("reset");
     }
   }, [searchParams]);
+
+  // Sync with external open prop
+  useEffect(() => {
+    setOpen(externalOpen ?? null);
+  }, [externalOpen]);
+
+  // Notify parent on open/close
+  useEffect(() => {
+    if (onOpenChange) {
+      if (open === "login" || open === "signup" || open === null) {
+        onOpenChange(open as "login" | "signup" | null);
+      }
+    }
+  }, [open, onOpenChange]);
 
   const doForgot = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -161,6 +177,184 @@ export default function AuthButtons() {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     setAuthed(false);
   };
+
+  // If controlled externally, only render dialogs
+  if (externalOpen && onOpenChange) {
+    return (
+      <>
+        <Dialog
+          open={open === "login"}
+          onOpenChange={(o) => {
+            setError(null);
+            setOpen(o ? "login" : null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Login</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={doLogin} className="space-y-3">
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="Email"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+              />
+              <input
+                name="password"
+                type="password"
+                required
+                placeholder="Password"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+              />
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-tr from-cyan-500 to-teal-400 text-white"
+              >
+                Sign in
+              </Button>
+            </form>
+            <div className="pt-2 text-right">
+              <button
+                className="text-xs text-cyan-500 hover:underline"
+                type="button"
+                onClick={() => setOpen("forgot")}
+              >
+                Forgot password?
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={open === "signup"}
+          onOpenChange={(o) => {
+            setError(null);
+            if (o) setSignupSuccess(false);
+            setOpen(o ? "signup" : null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create your account</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={doSignup} className="space-y-3">
+              <input
+                name="username"
+                type="text"
+                required
+                placeholder="Name"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+              />
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="Work email"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+              />
+              <input
+                name="password"
+                type="password"
+                required
+                placeholder="Password"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+              />
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-tr from-cyan-500 to-teal-400 text-white"
+              >
+                Create account
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+        {/* OTP, Forgot, Reset dialogs for full flow */}
+        <Dialog open={open === "otp"} onOpenChange={(o) => setOpen(o ? "otp" : null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Verify your email</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={doVerifyOtp} className="space-y-3">
+              <input
+                name="otp"
+                type="text"
+                required
+                maxLength={6}
+                pattern="[0-9]{6}"
+                placeholder="Enter 6-digit OTP sent to your email"
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 tracking-widest text-center"
+                value={otp}
+                onChange={e => setOtp(e.target.value)}
+              />
+              {otpError && <div className="text-red-500 text-sm">{otpError}</div>}
+              {otpSuccess && <div className="text-green-600 text-sm">Account verified! You can now log in.</div>}
+              <Button type="submit" className="w-full bg-cyan-500 text-white">
+                Verify
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={open === "forgot"} onOpenChange={(o) => setOpen(o ? "forgot" : null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Forgot Password</DialogTitle>
+            </DialogHeader>
+            {forgotSent ? (
+              <div className="text-green-600">If this email exists, a reset link has been sent. Please check your inbox and spam folder. The link will open a password reset dialog.</div>
+            ) : (
+              <form onSubmit={doForgot} className="space-y-3">
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Your email address"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+                />
+                {error && <div className="text-red-500 text-sm">{error}</div>}
+                <Button type="submit" className="w-full bg-cyan-500 text-white">
+                  Send reset link
+                </Button>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
+        <Dialog open={open === "reset"} onOpenChange={(o) => setOpen(o ? "reset" : null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Reset Password</DialogTitle>
+            </DialogHeader>
+            {resetSuccess ? (
+              <div className="text-green-600">Password reset! You can now log in.</div>
+            ) : (
+              <form onSubmit={doReset} className="space-y-3">
+                <input
+                  name="password"
+                  type="password"
+                  required
+                  placeholder="New password"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+                />
+                <input
+                  name="confirm"
+                  type="password"
+                  required
+                  placeholder="Confirm new password"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3"
+                />
+                {error && <div className="text-red-500 text-sm">{error}</div>}
+                <Button type="submit" className="w-full bg-cyan-500 text-white">
+                  Reset password
+                </Button>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
 
   return (
     <div className="flex items-center gap-2">
