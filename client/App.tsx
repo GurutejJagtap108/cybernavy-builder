@@ -103,74 +103,66 @@ function Protected({ children }: { children: React.ReactNode }) {
 
 
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route
-                path="/profile"
-                element={
-                  <PageFade>
-                    <Protected>
-                      <ProfilePage />
-                    </Protected>
-                  </PageFade>
-                }
-              />
-              <Route path="/" element={<PageFade><Index /></PageFade>} />
-              <Route
-                path="/solutions"
-                element={<PageFade><Solutions /></PageFade>}
-              />
-              <Route
-                path="/pricing"
-                element={<PageFade><Pricing /></PageFade>}
-              />
-              <Route path="/docs" element={<PageFade><Docs /></PageFade>} />
-              <Route
-                path="/blog"
-                element={<PageFade><Blog /></PageFade>}
-              />
-              <Route path="/company" element={<PageFade><Company /></PageFade>} />
-              <Route path="/legal" element={<PageFade><Legal /></PageFade>} />
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <I18nProvider>
+          <TooltipProvider>
+            <div className="min-h-screen bg-background">
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <PageFade>
+                  <Routes>
+                    <Route
+                      path="/profile"
+                      element={
+                        <Protected>
+                          <ProfilePage />
+                        </Protected>
+                      }
+                    />
+                    <Route path="/" element={<Index />} />
+                    <Route path="/solutions" element={<Solutions />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/docs" element={<Docs />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/company" element={<Company />} />
+                    <Route path="/legal" element={<Legal />} />
 
+                    {/* Dashboard main and function routes */}
+                    <Route
+                      path="/app"
+                      element={
+                        <Protected>
+                          <AppDashboard />
+                        </Protected>
+                      }
+                    />
+                    <Route path="/app/threats" element={<Protected><Threats /></Protected>} />
+                    <Route path="/app/detection" element={<Protected><Detection /></Protected>} />
+                    <Route path="/app/moderation" element={<Protected><Moderation /></Protected>} />
+                    <Route path="/app/url-manager" element={<Protected><URLManager /></Protected>} />
+                    <Route path="/app/alerts" element={<Protected><Alerts /></Protected>} />
+                    <Route path="/app/incidents" element={<Protected><Incidents /></Protected>} />
+                    <Route path="/app/network" element={<Protected><Network /></Protected>} />
+                    <Route path="/app/reports" element={<Protected><Reports /></Protected>} />
+                    <Route path="/app/settings" element={<Protected><Settings /></Protected>} />
+                    <Route path="/app/integrations" element={<Protected><Integrations /></Protected>} />
 
-              {/* Dashboard main and function routes */}
-              <Route
-                path="/app"
-                element={
-                  <PageFade>
-                    <Protected>
-                      <AppDashboard />
-                    </Protected>
-                  </PageFade>
-                }
-              />
-              <Route path="/app/threats" element={<PageFade><Protected><Threats /></Protected></PageFade>} />
-              <Route path="/app/detection" element={<PageFade><Protected><Detection /></Protected></PageFade>} />
-              <Route path="/app/moderation" element={<PageFade><Protected><Moderation /></Protected></PageFade>} />
-              <Route path="/app/url-manager" element={<PageFade><Protected><URLManager /></Protected></PageFade>} />
-              <Route path="/app/alerts" element={<PageFade><Protected><Alerts /></Protected></PageFade>} />
-              <Route path="/app/incidents" element={<PageFade><Protected><Incidents /></Protected></PageFade>} />
-              <Route path="/app/network" element={<PageFade><Protected><Network /></Protected></PageFade>} />
-              <Route path="/app/reports" element={<PageFade><Protected><Reports /></Protected></PageFade>} />
-              <Route path="/app/settings" element={<PageFade><Protected><Settings /></Protected></PageFade>} />
-              <Route path="/app/integrations" element={<PageFade><Protected><Integrations /></Protected></PageFade>} />
-
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<PageFade><NotFound /></PageFade>} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </I18nProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </PageFade>
+              </BrowserRouter>
+            </div>
+          </TooltipProvider>
+        </I18nProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
 
