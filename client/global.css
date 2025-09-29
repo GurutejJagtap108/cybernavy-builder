@@ -27,18 +27,18 @@ html, body, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Light mode text improvements */
-.text-gray-700 {
-  color: hsl(var(--foreground)) !important;
+/* Light mode dashboard card text improvements - only for dashboard cards */
+:not(.dark) .text-gray-700 {
+  color: hsl(222 84% 4.9%) !important;
 }
-.text-gray-900 {
-  color: hsl(var(--foreground)) !important;
+:not(.dark) .text-gray-900 {
+  color: hsl(222 84% 4.9%) !important;
 }
-.text-white\/80 {
-  color: hsl(var(--foreground)) !important;
+:not(.dark) .text-white\/80 {
+  color: hsl(222 84% 4.9%) !important;
 }
-.text-white\/90 {
-  color: hsl(var(--foreground)) !important;
+:not(.dark) .text-white\/90 {
+  color: hsl(222 84% 4.9%) !important;
 }
 
 /* Dashboard metric cards: force dark backgrounds in dark mode */

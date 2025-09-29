@@ -45,13 +45,13 @@ export default function Home() {
     <SiteShell>
       <section className="grid md:grid-cols-2 gap-8 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-200">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-700 dark:text-cyan-200">
             <Sparkles className="size-3" /> Enterprise-grade SOC Platform
           </div>
-          <h1 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+          <h1 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white">
             CyberNavy — Modern Cybersecurity Operations
           </h1>
-          <p className="mt-4 text-foreground/80 max-w-prose">
+          <p className="mt-4 text-gray-700 dark:text-gray-300 max-w-prose">
             Unify threat detection, incident response, and compliance in one
             sleek, blazing-fast platform. Built for real-time visibility, secure
             automation, and global teams.
@@ -76,12 +76,12 @@ export default function Home() {
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
             <div className="glass-card p-4 rounded-lg">
-              <div className="text-2xl font-semibold">2.5s</div>
-              <div className="text-foreground/60">LCP target met</div>
+              <div className="text-2xl font-semibold text-gray-900 dark:text-white">2.5s</div>
+              <div className="text-gray-600 dark:text-gray-400">LCP target met</div>
             </div>
             <div className="glass-card p-4 rounded-lg">
-              <div className="text-2xl font-semibold">AA</div>
-              <div className="text-foreground/60">WCAG contrast</div>
+              <div className="text-2xl font-semibold text-gray-900 dark:text-white">AA</div>
+              <div className="text-gray-600 dark:text-gray-400">WCAG contrast</div>
             </div>
           </div>
         </div>
@@ -143,9 +143,9 @@ export default function Home() {
               key={f.title}
               className="glass-card p-5 rounded-xl hover:translate-y-[-2px] transition-transform"
             >
-              <f.icon className="size-5 text-cyan-300" />
-              <h3 className="mt-3 font-semibold">{f.title}</h3>
-              <p className="text-sm text-foreground/70">{f.desc}</p>
+              <f.icon className="size-5 text-cyan-600 dark:text-cyan-300" />
+              <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{f.title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -154,10 +154,10 @@ export default function Home() {
       <section className="mt-16 md:mt-24 rounded-2xl border border-white/10 p-8 glass-card">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
               Built for teams that never sleep
             </h2>
-            <p className="text-foreground/80 mt-2 max-w-prose">
+            <p className="text-gray-700 dark:text-gray-300 mt-2 max-w-prose">
               From detection to post‑mortem, CyberNavy streamlines your
               end‑to‑end operations with role‑based access controls and audit
               trails.

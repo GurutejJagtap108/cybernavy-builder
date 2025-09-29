@@ -81,8 +81,8 @@ export default function Pricing() {
 	return (
 		<SiteShell>
 			<div className="max-w-5xl mx-auto px-4 py-16">
-				<h1 className="text-4xl font-extrabold text-center mb-4">Pricing</h1>
-				<p className="text-center text-foreground/70 mb-12 text-lg max-w-2xl mx-auto">
+				<h1 className="text-4xl font-extrabold text-center mb-4 text-gray-900 dark:text-white">Pricing</h1>
+				<p className="text-center text-gray-700 dark:text-gray-300 mb-12 text-lg max-w-2xl mx-auto">
 					Simple, transparent pricing. No hidden fees. Upgrade, downgrade, or
 					cancel anytime.
 				</p>
@@ -96,7 +96,7 @@ export default function Pricing() {
 									: "border-transparent"
 							}`}
 						>
-							<h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
+							<h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">{plan.name}</h2>
 							<div className="text-4xl font-extrabold mb-2">
 								{plan.price === 0 ? (
 									"Free"
@@ -112,14 +112,14 @@ export default function Pricing() {
 									</>
 								)}
 							</div>
-							<p className="text-foreground/70 mb-6 text-center">
+							<p className="text-gray-600 dark:text-gray-300 mb-6 text-center">
 								{plan.description}
 							</p>
 							<ul className="mb-8 w-full text-left space-y-3">
 								{plan.features.map((feature) => (
 									<li
 										key={feature}
-										className="flex items-center gap-2 text-foreground/90"
+										className="flex items-center gap-2 text-gray-700 dark:text-gray-300"
 									>
 										<CheckCircle className="text-cyan-500 w-5 h-5" />
 										{feature}
@@ -153,11 +153,11 @@ export default function Pricing() {
 						</div>
 					))}
 				</div>
-				<div className="mt-16 text-center text-foreground/70 text-sm">
+				<div className="mt-16 text-center text-gray-600 dark:text-gray-400 text-sm">
 					Need a custom plan or have questions?{" "}
 					<a
 						href="/company"
-						className="underline text-cyan-600"
+						className="underline text-cyan-600 dark:text-cyan-400"
 					>
 						Contact us
 					</a>
